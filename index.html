@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Strength Checker — Instant Free Tool</title>
+  <meta name="description" content="Check your password strength instantly. Free online tool that scores your password and shows exactly how to make it stronger. No sign-up required.">
+  <meta name="keywords" content="password strength checker, check password strength, strong password test, password security checker">
+  <meta property="og:title" content="Password Strength Checker — Instant & Free">
+  <meta property="og:description" content="Test your password strength instantly. See your score and get tips to make it stronger.">
+  <link rel="canonical" href="https://instantpasswordcheck.com/">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f4f8; color: #1a202c; min-height: 100vh; }
+    header { background: #2b6cb0; color: white; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    header h1 { font-size: 1.25rem; font-weight: 700; }
+    .tagline { font-size: 0.85rem; opacity: 0.85; }
+    main { max-width: 680px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem; color: #2d3748; }
+    .input-wrap { position: relative; }
+    input[type="text"], input[type="password"] {
+      width: 100%; padding: 0.85rem 3rem 0.85rem 1rem;
+      border: 2px solid #e2e8f0; border-radius: 8px;
+      font-size: 1.1rem; transition: border-color 0.2s;
+      font-family: monospace;
+    }
+    input:focus { outline: none; border-color: #2b6cb0; }
+    .toggle-btn {
+      position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: #718096; font-size: 0.85rem;
+      padding: 0.25rem;
+    }
+    .strength-bar-wrap { margin-top: 1rem; }
+    .strength-bar-bg { height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+    .strength-bar { height: 100%; border-radius: 99px; transition: width 0.4s ease, background 0.4s ease; width: 0%; }
+    .strength-label { margin-top: 0.5rem; font-weight: 700; font-size: 1rem; height: 1.25rem; }
+    .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.25rem; }
+    .score-item { background: #f7fafc; border-radius: 8px; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+    .score-item .icon { font-size: 1.1rem; }
+    .tips { margin-top: 1rem; }
+    .tip { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; color: #4a5568; }
+    .tip:last-child { border-bottom: none; }
+    .tip .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .dot.pass { background: #48bb78; }
+    .dot.fail { background: #fc8181; }
+    h2 { font-size: 1.1rem; font-weight: 700; color: #2d3748; margin-bottom: 0.75rem; }
+    .time-crack { background: #ebf8ff; border-left: 4px solid #2b6cb0; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.95rem; margin-top: 1rem; }
+    .time-crack strong { color: #2b6cb0; }
+    .content-section { line-height: 1.7; color: #4a5568; }
+    .content-section h2 { color: #2d3748; margin: 1.25rem 0 0.5rem; }
+    .content-section ul { padding-left: 1.25rem; margin: 0.5rem 0; }
+    .content-section li { margin-bottom: 0.35rem; }
+    .faq { margin-top: 0.5rem; }
+    .faq-item { border-bottom: 1px solid #e2e8f0; padding: 1rem 0; }
+    .faq-q { font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; }
+    footer { text-align: center; padding: 2rem 1rem; color: #a0aec0; font-size: 0.85rem; }
+    footer a { color: #a0aec0; margin: 0 0.5rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🔒 Password Strength Checker</h1>
+    <div class="tagline">Instant • Free • Private — nothing is stored or sent</div>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <label for="pwd">Enter your password to check:</label>
+    <div class="input-wrap">
+      <input type="password" id="pwd" placeholder="Type or paste your password..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button class="toggle-btn" id="toggleBtn" onclick="toggleShow()" title="Show/hide">👁</button>
+    </div>
+
+    <div class="strength-bar-wrap">
+      <div class="strength-bar-bg">
+        <div class="strength-bar" id="strengthBar"></div>
+      </div>
+      <div class="strength-label" id="strengthLabel"></div>
+    </div>
+
+    <div class="time-crack" id="timeCrack" style="display:none">
+      ⏱ Estimated time to crack: <strong id="crackTime">—</strong>
+    </div>
+
+    <div class="score-grid" id="scoreGrid" style="display:none">
+      <div class="score-item"><span class="icon" id="lenIcon">⬜</span> <span id="lenText">8+ characters</span></div>
+      <div class="score-item"><span class="icon" id="upperIcon">⬜</span> <span>Uppercase letters</span></div>
+      <div class="score-item"><span class="icon" id="lowerIcon">⬜</span> <span>Lowercase letters</span></div>
+      <div class="score-item"><span class="icon" id="numIcon">⬜</span> <span>Numbers</span></div>
+      <div class="score-item"><span class="icon" id="symIcon">⬜</span> <span>Special characters</span></div>
+      <div class="score-item"><span class="icon" id="longIcon">⬜</span> <span>12+ characters</span></div>
+    </div>
+
+    <div class="tips" id="tipsBox" style="display:none">
+      <div id="tipsList"></div>
+    </div>
+  </div>
+
+  <div class="card content-section">
+    <h2>How to Use This Password Strength Checker</h2>
+    <p>Simply type or paste your password into the field above. The checker runs entirely in your browser — your password is <strong>never sent to any server</strong>. Results appear instantly as you type.</p>
+
+    <h2>What Makes a Strong Password?</h2>
+    <p>A strong password should meet all of the following criteria:</p>
+    <ul>
+      <li><strong>Length:</strong> At least 12 characters — longer is always better</li>
+      <li><strong>Uppercase letters:</strong> Include at least one capital letter (A–Z)</li>
+      <li><strong>Lowercase letters:</strong> Mix in lowercase letters (a–z)</li>
+      <li><strong>Numbers:</strong> Add digits (0–9) throughout</li>
+      <li><strong>Special characters:</strong> Use symbols like !@#$%^&amp;*()</li>
+      <li><strong>No dictionary words:</strong> Avoid common words, names, or dates</li>
+    </ul>
+
+    <h2>Why Password Strength Matters</h2>
+    <p>Weak passwords are the #1 cause of account breaches. A simple 6-character password can be cracked in seconds with modern hardware. A 12-character password mixing letters, numbers, and symbols would take millions of years to crack with brute force — making it effectively unbreakable.</p>
+
+    <div class="faq">
+      <div class="faq-item">
+        <div class="faq-q">Is my password saved or stored?</div>
+        <div>No. This tool runs 100% in your browser. Your password never leaves your device and is never transmitted to any server.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What is a "crack time" estimate?</div>
+        <div>It's an estimate of how long it would take a modern computer using brute-force methods to guess your password. The longer the crack time, the safer your password.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How often should I change my password?</div>
+        <div>Security experts now recommend changing passwords only when you suspect a breach — but always use a unique, strong password for every account.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What's the best way to manage strong passwords?</div>
+        <div>Use a reputable password manager (like Bitwarden, 1Password, or Dashlane) to generate and store unique strong passwords for every site.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 InstantPasswordCheck.com — Free password security tool</p>
+  <p style="margin-top:0.5rem"><a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms of Use</a></p>
+</footer>
+
+<script>
+const pwd = document.getElementById('pwd');
+const bar = document.getElementById('strengthBar');
+const label = document.getElementById('strengthLabel');
+const timeCrack = document.getElementById('timeCrack');
+const crackTime = document.getElementById('crackTime');
+const scoreGrid = document.getElementById('scoreGrid');
+const tipsBox = document.getElementById('tipsBox');
+const tipsList = document.getElementById('tipsList');
+
+const colors = ['#fc8181','#f6ad55','#f6e05e','#68d391','#48bb78'];
+const labels = ['Very Weak','Weak','Fair','Strong','Very Strong'];
+
+function toggleShow() {
+  pwd.type = pwd.type === 'password' ? 'text' : 'password';
+}
+
+function estimateCrackTime(p) {
+  const charset = ((/[a-z]/).test(p) ? 26 : 0) + ((/[A-Z]/).test(p) ? 26 : 0) +
+                  ((/[0-9]/).test(p) ? 10 : 0) + ((/[^a-zA-Z0-9]/).test(p) ? 32 : 0);
+  const combinations = Math.pow(Math.max(charset, 1), p.length);
+  const guessesPerSec = 1e10;
+  const seconds = combinations / guessesPerSec;
+  if (seconds < 1) return 'Less than a second';
+  if (seconds < 60) return `${Math.round(seconds)} seconds`;
+  if (seconds < 3600) return `${Math.round(seconds/60)} minutes`;
+  if (seconds < 86400) return `${Math.round(seconds/3600)} hours`;
+  if (seconds < 31536000) return `${Math.round(seconds/86400)} days`;
+  if (seconds < 3153600000) return `${Math.round(seconds/31536000)} years`;
+  return 'Millions of years';
+}
+
+function check(p) {
+  if (!p) {
+    bar.style.width = '0%'; label.textContent = ''; timeCrack.style.display='none';
+    scoreGrid.style.display='none'; tipsBox.style.display='none'; return;
+  }
+  const hasLen = p.length >= 8;
+  const hasLong = p.length >= 12;
+  const hasUpper = /[A-Z]/.test(p);
+  const hasLower = /[a-z]/.test(p);
+  const hasNum = /[0-9]/.test(p);
+  const hasSym = /[^a-zA-Z0-9]/.test(p);
+
+  let score = 0;
+  if (hasLen) score++;
+  if (hasLong) score++;
+  if (hasUpper) score++;
+  if (hasLower) score++;
+  if (hasNum) score++;
+  if (hasSym) score++;
+  score = Math.min(4, Math.floor(score * 4 / 6));
+
+  bar.style.width = ((score+1)*20) + '%';
+  bar.style.background = colors[score];
+  label.textContent = labels[score];
+  label.style.color = colors[score];
+
+  crackTime.textContent = estimateCrackTime(p);
+  timeCrack.style.display = 'block';
+  scoreGrid.style.display = 'grid';
+
+  const icon = (pass) => pass ? '✅' : '❌';
+  document.getElementById('lenIcon').textContent = icon(hasLen);
+  document.getElementById('longIcon').textContent = icon(hasLong);
+  document.getElementById('upperIcon').textContent = icon(hasUpper);
+  document.getElementById('lowerIcon').textContent = icon(hasLower);
+  document.getElementById('numIcon').textContent = icon(hasNum);
+  document.getElementById('symIcon').textContent = icon(hasSym);
+
+  const tips = [];
+  if (!hasLen) tips.push('Use at least 8 characters');
+  if (!hasLong) tips.push('Use 12 or more characters for best security');
+  if (!hasUpper) tips.push('Add uppercase letters (A–Z)');
+  if (!hasLower) tips.push('Add lowercase letters (a–z)');
+  if (!hasNum) tips.push('Include numbers (0–9)');
+  if (!hasSym) tips.push('Add special characters (!@#$%^&*)');
+
+  if (tips.length) {
+    tipsBox.style.display = 'block';
+    tipsList.innerHTML = '<strong style="font-size:0.9rem;color:#2d3748">💡 Suggestions:</strong>' +
+      tips.map(t => `<div class="tip"><span class="dot fail"></span>${t}</div>`).join('');
+  } else {
+    tipsBox.style.display = 'block';
+    tipsList.innerHTML = '<div class="tip"><span class="dot pass"></span><strong>Excellent! Your password meets all strength criteria.</strong></div>';
+  }
+}
+
+pwd.addEventListener('input', () => check(pwd.value));
+</script>
+</body>
+</html>
