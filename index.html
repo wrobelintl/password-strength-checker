@@ -62,7 +62,7 @@
 
 <header>
   <div>
-    <h1>🔒 Password Strength Checker</h1>
+    <h1> Password Strength Checker</h1>
     <div class="tagline">Instant • Free • Private — nothing is stored or sent</div>
   </div>
 </header>
@@ -72,7 +72,7 @@
     <label for="pwd">Enter your password to check:</label>
     <div class="input-wrap">
       <input type="password" id="pwd" placeholder="Type or paste your password..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-      <button class="toggle-btn" id="toggleBtn" onclick="toggleShow()" title="Show/hide">👁</button>
+      <button class="toggle-btn" id="toggleBtn" onclick="toggleShow()" title="Show/hide"></button>
     </div>
 
     <div class="strength-bar-wrap">
@@ -87,12 +87,12 @@
     </div>
 
     <div class="score-grid" id="scoreGrid" style="display:none">
-      <div class="score-item"><span class="icon" id="lenIcon">⬜</span> <span id="lenText">8+ characters</span></div>
-      <div class="score-item"><span class="icon" id="upperIcon">⬜</span> <span>Uppercase letters</span></div>
-      <div class="score-item"><span class="icon" id="lowerIcon">⬜</span> <span>Lowercase letters</span></div>
-      <div class="score-item"><span class="icon" id="numIcon">⬜</span> <span>Numbers</span></div>
-      <div class="score-item"><span class="icon" id="symIcon">⬜</span> <span>Special characters</span></div>
-      <div class="score-item"><span class="icon" id="longIcon">⬜</span> <span>12+ characters</span></div>
+      <div class="score-item"><span class="icon" id="lenIcon"></span> <span id="lenText">8+ characters</span></div>
+      <div class="score-item"><span class="icon" id="upperIcon"></span> <span>Uppercase letters</span></div>
+      <div class="score-item"><span class="icon" id="lowerIcon"></span> <span>Lowercase letters</span></div>
+      <div class="score-item"><span class="icon" id="numIcon"></span> <span>Numbers</span></div>
+      <div class="score-item"><span class="icon" id="symIcon"></span> <span>Special characters</span></div>
+      <div class="score-item"><span class="icon" id="longIcon"></span> <span>12+ characters</span></div>
     </div>
 
     <div class="tips" id="tipsBox" style="display:none">
@@ -206,7 +206,7 @@ function check(p) {
   timeCrack.style.display = 'block';
   scoreGrid.style.display = 'grid';
 
-  const icon = (pass) => pass ? '✅' : '❌';
+  const icon = (pass) => pass ? '' : '';
   document.getElementById('lenIcon').textContent = icon(hasLen);
   document.getElementById('longIcon').textContent = icon(hasLong);
   document.getElementById('upperIcon').textContent = icon(hasUpper);
@@ -224,7 +224,7 @@ function check(p) {
 
   if (tips.length) {
     tipsBox.style.display = 'block';
-    tipsList.innerHTML = '<strong style="font-size:0.9rem;color:#2d3748">💡 Suggestions:</strong>' +
+    tipsList.innerHTML = '<strong style="font-size:0.9rem;color:#2d3748"> Suggestions:</strong>' +
       tips.map(t => `<div class="tip"><span class="dot fail"></span>${t}</div>`).join('');
   } else {
     tipsBox.style.display = 'block';
